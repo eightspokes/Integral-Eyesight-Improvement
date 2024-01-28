@@ -6,22 +6,29 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct CoursesView: View {
 
     @EnvironmentObject var  coursesViewModel: CoursesViewModel
     var body: some View {
         VStack {
-            Text("Number of videos \(coursesViewModel.videos.count)")
-            if coursesViewModel.videos.count > 0 {
-                Text("Title is \(coursesViewModel.videos[0].title )")
-                Text("Thumbnail is \(coursesViewModel.videos[0].thumbnail)")
+            Text(coursesViewModel.lessons.first?.title ?? "")
+            Text(coursesViewModel.lessons.first?.description ?? "Value unavailable")
+            Text(coursesViewModel.lessons.first?.videoStreamUrl ?? "Value unavailable")
+            Text(coursesViewModel.lessons.first?.videoDownloadUrl ?? "Value unavailable")
+            Text("\(coursesViewModel.lessons.first?.tags.count ?? 0)")
+
+            Text(coursesViewModel.courses.first?.title ?? "not available")
+            if let isPaid =  coursesViewModel.courses.first?.isPaid {
+                Text("Is Paid \(isPaid)")
             }
+
+
             }
             .task {
                 do{
-                    print("Initializing courses view model")
-                    try await coursesViewModel.initializeVideos()
+                    try await coursesViewModel.fetchCloudKitRecords()
                 }catch{
 
                 }
@@ -31,4 +38,5 @@ struct CoursesView: View {
 
 #Preview {
     CoursesView()
+        .environmentObject(CoursesViewModel(cloudKitService: CloudKitService(container: CKContainer(identifier: "iCloud.com.integraleyesight.Integral-Eyesight-Improvement"))))
 }

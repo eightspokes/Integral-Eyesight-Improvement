@@ -1,20 +1,17 @@
-//
-//  Integral_Eyesight_ImprovementApp.swift
-//  Integral-Eyesight-Improvement
-//
-//  Created by Roman Kozulia on 12/10/23.
-//
-
 import SwiftUI
 import CloudKit
 
 @main
-
 struct Integral_Eyesight_ImprovementApp: App {
 
+    let cloudKitService: CloudKitService
 
-    var coursesViewModel = CoursesViewModel(container: CKContainer(identifier: "iCloud.com.integraleyesight.Integral-Eyesight-Improvement"))
+    var coursesViewModel: CoursesViewModel
 
+    init() {
+        cloudKitService = CloudKitService(container: CKContainer(identifier: "iCloud.com.integraleyesight.Integral-Eyesight-Improvement"))
+        coursesViewModel = CoursesViewModel(cloudKitService: cloudKitService)
+    }
 
     var body: some Scene {
         WindowGroup {
